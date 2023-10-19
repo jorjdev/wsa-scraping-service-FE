@@ -1,8 +1,9 @@
 interface ISubmitIconProps {
   size: number;
+  color: string;
 }
 
-const SubmitIcon: React.FC<ISubmitIconProps> = ({ size }) => {
+const SubmitIcon: React.FC<ISubmitIconProps> = ({ size, color }) => {
   return (
     <>
       <svg
@@ -14,7 +15,7 @@ const SubmitIcon: React.FC<ISubmitIconProps> = ({ size }) => {
         xmlnsXlink="http://www.w3.org/1999/xlink"
       >
         <path
-          fill="#444"
+          fill={color}
           d="M4 0v6h-3v10h14v-16h-11zM12 11h-5v2l-3-2.5 3-2.5v2h4v-3h1v4z"
         ></path>
       </svg>

@@ -15,12 +15,14 @@ export interface ApiResponse {
   sentiment: string;
   words: number;
 }
-
+export interface ApiError {
+  error: string;
+}
 const Container: React.FunctionComponent<IContainerProps> = ({ className }) => {
   const [typedTargetURL, setTypedTargetURL] = useState("");
   const [queryParameters, setQueryParameters] = useState("");
   const [combinedValue, setCombinedValue] = useState("");
-  const [result, setResult] = useState<ApiResponse[]>([]);
+  const [result, setResult] = useState<ApiResponse[] | Error>([]);
 
   useEffect(() => {
     setCombinedValue(typedTargetURL + queryParameters);
@@ -49,7 +51,7 @@ const Container: React.FunctionComponent<IContainerProps> = ({ className }) => {
         />
       </div>
       <Results
-        fetchedResult={result}
+        fetchedResult={result as ApiResponse[] | ApiError} // Use type assertion
         className="flex flex-col items-center gap-6"
       />
     </div>

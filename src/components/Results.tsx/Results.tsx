@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
-import { ApiResponse } from "../SearchAndResultsContainer/Container";
+import React from "react";
+import { ApiError, ApiResponse } from "../SearchAndResultsContainer/Container";
 
 interface IResultsProps {
   className: string;
-  fetchedResult: ApiResponse[];
+  fetchedResult: ApiResponse[] | ApiError;
 }
 
 const Results: React.FunctionComponent<IResultsProps> = ({
@@ -11,33 +11,45 @@ const Results: React.FunctionComponent<IResultsProps> = ({
   fetchedResult,
 }) => {
   const renderResults = () => {
-    return fetchedResult.length === 0 ? (
-      " "
-    ) : (
-      <div className="ml-5">
-        {"["}
-        {fetchedResult.map((result, index) => (
-          <div key={index} className="ml-8">
-            {"{"}
-            {result.title && <div key="title">"title": "{result.title},"</div>}
-            {result.short_description && (
-              <div key="short_description">
-                "short_description": "{result.short_description},"
-              </div>
-            )}
-            {result.image && <div key="image">"Image": "{result.image},"</div>}
-            {result.href && <div key="href">"href": "{result.href},"</div>}
-            {result.sentiment && (
-              <div key="sentiment">"sentiment": "{result.sentiment},"</div>
-            )}
-            {result.words && <div key="words">"words": "{result.words}"</div>}
-            {"}"}
-            {index < fetchedResult.length - 1 && <span>,</span>}
-          </div>
-        ))}
-        {"]"}
-      </div>
-    );
+    if ("error" in fetchedResult) {
+      return (
+        <div className="error-message">
+          An error occurred: {fetchedResult.error}
+        </div>
+      );
+    } else if (Array.isArray(fetchedResult) && fetchedResult.length > 0) {
+      return (
+        <div className="ml-5 mt-4">
+          {"["}
+          {fetchedResult.map((result, index) => (
+            <div key={index} className="ml-8">
+              {"{"}
+              {result.title && (
+                <div key="title">"title": "{result.title},"</div>
+              )}
+              {result.short_description && (
+                <div key="short_description">
+                  "short_description": "{result.short_description},"
+                </div>
+              )}
+              {result.image && (
+                <div key="image">"Image": "{result.image}",</div>
+              )}
+              {result.href && <div key="href">"href": "{result.href}",</div>}
+              {result.sentiment && (
+                <div key="sentiment">"sentiment": "{result.sentiment}",</div>
+              )}
+              {result.words && <div key="words">"words": "{result.words}"</div>}
+              {"}"}
+              {index < fetchedResult.length - 1 && <span>,</span>}
+            </div>
+          ))}
+          {"]"}
+        </div>
+      );
+    } else {
+      return <div>No results to display.</div>;
+    }
   };
 
   return (
